@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>测测你和ta</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+:root{--ink:#1d1d1f;--ink2:rgba(60,60,67,.6);--glass:rgba(255,255,255,.36);--sheet:rgba(255,255,255,.72);--fill:rgba(255,255,255,.5);--fillh:rgba(255,255,255,.74);--track:rgba(118,118,128,.14);--thumb:rgba(255,255,255,.92);--hl:rgba(255,255,255,.75);--rim:1;--sh:rgba(40,55,90,.32);--tint:#0a84ff;--bg:#e6e9f0;--b1:#ffbfa3;--b2:#86c1ff;--b3:#b4e8d4;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body.pro{--ink:#f5f5f7;--ink2:rgba(235,235,245,.58);--glass:rgba(38,40,48,.42);--sheet:rgba(44,44,50,.72);--fill:rgba(255,255,255,.08);--fillh:rgba(255,255,255,.15);--track:rgba(255,255,255,.09);--thumb:rgba(255,255,255,.2);--hl:rgba(255,255,255,.14);--rim:.5;--sh:rgba(0,0,0,.75);--bg:#050507;--b1:#17386e;--b2:#0c4f57;--b3:#4a2a1a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue","Noto Sans SC",sans-serif;background-color:var(--bg);color:var(--ink);display:flex;justify-content:center;align-items:center;min-height:100dvh;padding:20px;transition:background-color .8s}
+
+.bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.85;transition:background-color .8s;will-change:transform}
+.bg i:nth-child(1){width:62vmax;height:62vmax;left:-18vmax;top:-22vmax;background-color:var(--b1);animation:f1 28s ease-in-out infinite}
+.bg i:nth-child(2){width:58vmax;height:58vmax;right:-20vmax;top:10vmax;background-color:var(--b2);animation:f2 34s ease-in-out infinite}
+.bg i:nth-child(3){width:50vmax;height:50vmax;left:10vmax;bottom:-24vmax;background-color:var(--b3);animation:f3 30s ease-in-out infinite}
+@keyframes f1{50%{transform:translate(9vmax,7vmax) scale(1.1)}}
+@keyframes f2{50%{transform:translate(-8vmax,6vmax) scale(.92)}}
+@keyframes f3{50%{transform:translate(7vmax,-8vmax) scale(1.12)}}
+
+.glass{position:relative}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;opacity:var(--rim);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 66%,rgba(255,255,255,.55));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+
+.wrap{position:relative;z-index:1;width:100%;max-width:540px}
+main{width:100%;padding:30px 22px 24px;border-radius:44px;background-color:var(--glass);backdrop-filter:blur(36px) saturate(190%);-webkit-backdrop-filter:blur(36px) saturate(190%);box-shadow:0 40px 90px -40px var(--sh),inset 0 1px 1px var(--hl),inset 0 -14px 28px -16px var(--hl)}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:22px}
+h1{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--ink2);font-size:15px;margin-top:4px}
+.chip{flex:none;border:0;border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;font-weight:600;color:var(--tint);background-color:var(--fill);box-shadow:inset 0 1px 0 var(--hl);cursor:pointer;transition:transform .3s cubic-bezier(.32,.72,0,1)}
+.chip:active{transform:scale(.94)}
+
+.hb{display:flex;gap:8px;flex:none}
+.sheet a{color:var(--tint);text-decoration:none;font-weight:600}
+.sheet p{user-select:text;-webkit-user-select:text}
+.home{position:relative;z-index:1;width:100%;max-width:860px;text-align:center;padding:24px 0 8px}
+.home>*{animation:rise .9s cubic-bezier(.16,1,.3,1) both}
+.home>:nth-child(2){animation-delay:.08s}.home>:nth-child(3){animation-delay:.16s}.home>:nth-child(4){animation-delay:.24s}.home>:nth-child(5){animation-delay:.32s}.home>:nth-child(6){animation-delay:.4s}
+.eyebrow{font-size:17px;font-weight:600;color:var(--ink2);letter-spacing:.02em}
+.home h1{font-size:clamp(46px,11vw,84px);font-weight:700;letter-spacing:-.045em;line-height:1.04;margin:10px 0 14px}
+.lead{font-size:clamp(18px,3.4vw,24px);font-weight:500;line-height:1.4;color:var(--ink2);max-width:520px;margin:0 auto 32px}
+.hseg{max-width:360px;margin:0 auto 38px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left}
+.tile{display:flex;flex-direction:column;min-height:320px;padding:32px 28px 26px;border-radius:38px;background-color:var(--glass);backdrop-filter:blur(36px) saturate(190%);-webkit-backdrop-filter:blur(36px) saturate(190%);box-shadow:0 30px 70px -40px var(--sh),inset 0 1px 1px var(--hl)}
+.tile.dk{background-color:rgba(18,18,22,.86);color:#f5f5f7}
+.tile h3{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.tile p{font-size:16px;line-height:1.55;color:var(--ink2);margin-top:8px}
+.tile.dk p,.tile.dk .stat span{color:rgba(235,235,245,.62)}
+.stat{margin-top:auto;padding:24px 0 20px;display:flex;align-items:baseline;gap:10px}
+.stat b{font-size:64px;line-height:1;font-weight:700;letter-spacing:-.04em}
+.stat span{font-size:15px;color:var(--ink2)}
+.tile .btn{flex:none;width:100%}
+.btn.lt{color:#1d1d1f;background-color:#f5f5f7;box-shadow:none}
+.foot2{margin-top:44px;font-size:13px;color:var(--ink2)}
+.foot2 a{color:var(--tint);text-decoration:none;font-weight:600}
+@media(max-width:640px){.tiles{grid-template-columns:1fr}.tile{min-height:0}}
+.nm{width:100%;height:46px;border:0;border-radius:999px;padding:0 20px;margin-bottom:14px;font:inherit;font-size:15px;text-align:center;color:var(--ink);background-color:var(--track);outline:none;transition:box-shadow .3s}
+.nm::placeholder{color:var(--ink2)}
+.nm:focus{box-shadow:inset 0 0 0 1.5px rgba(10,132,255,.55)}
+.seg{position:relative;display:flex;padding:4px;border-radius:999px;background-color:var(--track);margin-bottom:22px}
+.thumb{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:999px;background-color:var(--thumb);box-shadow:0 2px 8px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.8);transition:transform .5s cubic-bezier(.32,.72,0,1),width .5s cubic-bezier(.32,.72,0,1)}
+.seg button{position:relative;flex:1;border:0;background:none;padding:10px 0;font:inherit;font-size:15px;font-weight:500;color:var(--ink2);cursor:pointer;transition:color .3s}
+.seg button.on{color:#1d1d1f;font-weight:600}
+
+.meta{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:4px;border-radius:2px;background-color:var(--track);overflow:hidden}
+.bar b{display:block;height:100%;width:0;border-radius:2px;background-color:var(--tint);transition:width .5s cubic-bezier(.32,.72,0,1)}
+.q{font-size:22px;font-weight:650;line-height:1.4;letter-spacing:-.01em;margin:6px 4px 20px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;padding:15px 18px;border:0;border-radius:24px;background-color:var(--fill);color:var(--ink);font:inherit;font-size:16px;line-height:1.4;text-align:left;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04),inset 0 1px 0 var(--hl);transition:transform .3s cubic-bezier(.32,.72,0,1),background-color .25s,box-shadow .25s}
+@media(hover:hover){.opt:hover{background-color:var(--fillh)}}
+.opt:active{transform:scale(.975)}
+.opt i{flex:none;width:22px;height:22px;border-radius:50%;border:1.8px solid var(--ink2);display:grid;place-items:center;transition:background-color .25s,border-color .25s}
+.opt.sel{background-color:var(--fillh);box-shadow:inset 0 0 0 1.5px rgba(10,132,255,.55)}
+.opt.sel i{background-color:var(--tint);border-color:var(--tint)}
+.opt.sel i::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.opt.skip{color:var(--ink2);background-color:transparent;box-shadow:none;font-size:15px}
+.opt.skip.sel{box-shadow:inset 0 0 0 1.5px var(--track)}
+.opt.skip.sel i{background-color:var(--ink2);border-color:var(--ink2)}
+
+.nav{display:flex;gap:12px;margin-top:18px}
+.btn{flex:1;height:52px;border:0;border-radius:999px;font:inherit;font-size:16px;font-weight:600;color:var(--tint);background-color:var(--fill);cursor:pointer;box-shadow:inset 0 1px 0 var(--hl),0 6px 16px -8px var(--sh);transition:transform .3s cubic-bezier(.32,.72,0,1),opacity .3s}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.35;pointer-events:none}
+.btn.pri{color:#fff;background-image:linear-gradient(180deg,#42a0ff,#0a7aff);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 10px 22px -10px rgba(10,122,255,.8)}
+.btn.pro{color:#fff;background-image:linear-gradient(180deg,#3a3a3d,#0d0d0f);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 22px -10px rgba(0,0,0,.7)}
+
+.res-top{display:flex;align-items:center;gap:20px;margin:4px 0 18px}
+.ring{position:relative;width:112px;height:112px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .t{stroke:var(--track)}
+.ring .v{stroke:var(--tint);stroke-dasharray:301.6;stroke-dashoffset:301.6}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.tier{font-size:24px;font-weight:700;letter-spacing:-.01em;margin-top:8px}
+.lab{font-size:13px;color:var(--ink2);margin-top:2px}
+.open{font-size:17px;line-height:1.7;font-weight:500;margin-bottom:18px;min-height:2.4em}
+.grp{margin-bottom:14px}
+.grp h4{font-size:13px;font-weight:600;color:var(--ink2);margin:0 4px 8px;letter-spacing:.02em}
+.row{padding:12px 16px;border-radius:20px;background-color:var(--fill);margin-bottom:8px;box-shadow:inset 0 1px 0 var(--hl)}
+.row b{display:block;font-size:14px;font-weight:500;color:var(--ink2);margin-bottom:3px}
+.row span{font-size:16px;font-weight:600}
+.close{font-size:15px;line-height:1.7;color:var(--ink2);margin:6px 4px 0}
+.foot{text-align:center;font-size:12px;color:var(--ink2);opacity:.7;margin-top:14px}
+.letter,.dims,.todo{border-radius:24px;padding:16px 18px;margin-bottom:14px;background-color:var(--fill);box-shadow:inset 0 1px 0 var(--hl)}
+.letter h4,.dims h4,.todo h4{font-size:13px;font-weight:600;color:var(--ink2);margin:0 0 10px;letter-spacing:.02em}
+.letter p{font-size:16px;line-height:1.85;white-space:pre-wrap;min-height:9em}
+.todo p{font-size:16px;line-height:1.7}
+.dim{display:grid;grid-template-columns:44px 1fr 28px;align-items:center;gap:10px;margin-bottom:10px;font-size:14px}
+.dim:last-child{margin-bottom:0}
+.dim>div{height:6px;border-radius:3px;background-color:var(--track);overflow:hidden}
+.dim b{display:block;height:100%;width:var(--w);border-radius:3px;background-color:var(--tint);transform-origin:left}
+.dim em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink2);text-align:right}
+.go .dim b{animation:grow 1.3s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--d,0s) + .25s)}
+@keyframes grow{from{transform:scaleX(0)}}
+.dnote{margin-top:14px;padding-top:12px;border-top:1px solid var(--track);font-size:14px;line-height:1.7;color:var(--ink2)}
+.dnote p{margin-bottom:8px}
+.dnote p:last-child{margin-bottom:0}
+.dnote b{color:var(--ink);margin-right:8px}
+.todo ol{padding-left:20px;font-size:16px;line-height:1.7}
+.todo li{margin-bottom:6px}
+.todo li:last-child{margin-bottom:0}
+.todo summary{cursor:pointer;list-style:none;font-size:15px;font-weight:600;color:var(--tint)}
+.todo summary::-webkit-details-marker{display:none}
+.recap{margin-top:10px}
+.recap div{padding:10px 0;border-top:1px solid var(--track);font-size:14px}
+.recap b{display:block;font-weight:500;color:var(--ink2);margin-bottom:2px}
+.recap span{font-weight:600}
+.recap i{float:right;font-style:normal;letter-spacing:2px;color:var(--tint);font-size:10px;margin-top:4px}
+.row em{display:block;font-style:normal;font-size:13px;color:var(--ink2);margin-top:4px}
+.ch{opacity:0;filter:blur(6px);transition:opacity .5s,filter .5s}
+.ch.v{opacity:1;filter:none}
+.go .rise{animation:rise .9s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
+
+.md{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s}
+.md.show{opacity:1;pointer-events:auto}
+.sheet{width:100%;max-width:320px;padding:26px 20px 20px;border-radius:34px;text-align:center;background-color:var(--sheet);backdrop-filter:blur(40px) saturate(190%);-webkit-backdrop-filter:blur(40px) saturate(190%);box-shadow:0 30px 70px -20px rgba(0,0,0,.35),inset 0 1px 1px var(--hl);transform:scale(1.1);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.md.show .sheet{transform:none}
+.sheet h3{font-size:18px;font-weight:650}
+.sheet p{font-size:15px;line-height:1.55;color:var(--ink2);margin:8px 0 6px}
+.sheet .nav{margin-top:16px}
+
+.veil{position:fixed;inset:0;z-index:50;background:#000;pointer-events:none;clip-path:circle(0 at 50% 50%)}
+.veil-c{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;color:#f5f5f7}
+.veil h2{font-size:clamp(84px,24vw,150px);line-height:1;font-weight:700;letter-spacing:-.045em;padding:0 .06em;background:linear-gradient(180deg,#fff 20%,#7d7d84);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0}
+.veil p{margin-top:18px;font-size:clamp(16px,4.4vw,21px);letter-spacing:.08em;color:rgba(235,235,245,.62);opacity:0}
+
+@media(max-width:480px){main{padding:26px 16px 20px;border-radius:38px}h1{font-size:27px}.q{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.bg i{animation:none}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+
+<div class="home" id="home">
+  <p class="eyebrow">默契小测验</p>
+  <h1>测测你和ta</h1>
+  <p class="lead">挑一个模式，凭直觉回答几道小题。</p>
+  <nav class="seg hseg" id="hseg"><span class="thumb"></span><button data-m="love" class="on">爱情</button><button data-m="friend">友情</button><button data-m="random">随便一测</button></nav>
+  <div class="tiles">
+    <div class="tile glass"><h3>普通测试</h3><p>轻松上手，答完就能看到契合度和一段简短的解读。</p><div class="stat"><b>6</b><span>道题 · 约 1 分钟</span></div><button class="btn pri" id="goN">开始测试</button></div>
+    <div class="tile glass dk"><h3>Pro 测试</h3><p>更完整的题目，更细的关系画像，一段写给你们的话，以及可以马上去做的小事。</p><div class="stat"><b>15</b><span>道题 · 约 3 分钟</span></div><button class="btn lt" id="goP">进入 Pro</button></div>
+  </div>
+  <p class="foot2">作者 <a href="#contact" id="author">Fang</a></p>
+</div>
+<div class="wrap" id="wrap" hidden><main class="glass" id="card">
+  <header>
+    <div><h1>测测你和ta</h1><p class="sub" id="sub"></p></div>
+    <div class="hb"><button class="chip" id="hm">主页</button><button class="chip" id="xp" hidden>退出 Pro</button></div>
+  </header>
+  <input class="nm" id="nm" maxlength="8" placeholder="给ta起个称呼（可选）" autocomplete="off">
+  <nav class="seg" id="segEl">
+    <span class="thumb" id="th"></span>
+    <button data-m="love" class="on">爱情</button><button data-m="friend">友情</button><button data-m="random">随便一测</button>
+  </nav>
+
+  <div id="stage">
+    <section id="quiz">
+      <div class="meta"><span id="prog"></span><div class="bar"><b id="fill"></b></div></div>
+      <div id="qc"><div class="q" id="qt"></div><div class="opts" id="opts"></div></div>
+      <div class="nav"><button class="btn" id="prev">上一题</button><button class="btn pri" id="next" disabled>下一题</button></div>
+    </section>
+
+    <section id="result" hidden>
+      <div class="res-top rise">
+        <div class="ring"><svg viewBox="0 0 112 112"><circle class="t" cx="56" cy="56" r="48"/><circle class="v" id="rv" cx="56" cy="56" r="48"/></svg><span id="num">0</span></div>
+        <div><div class="lab" id="rtag"></div><div class="tier" id="tier"></div><div class="lab" id="rlab">契合度</div></div>
+      </div>
+      <p class="open" id="open"></p>
+      <div class="letter rise" id="letter" hidden></div>
+      <div class="dims rise" id="dims" hidden></div>
+      <div class="todo rise" id="style" hidden></div>
+      <div id="rows" class="rise"></div>
+      <div class="todo rise" id="all" hidden></div>
+      <div class="todo rise" id="todo"></div>
+      <p class="close rise" id="close"></p>
+      <div class="nav rise"><button class="btn" id="again">再测一次</button><button class="btn pro" id="proBtn">Pro 测试</button></div>
+      <div class="foot"><button class="chip" id="copy">复制结果</button><p style="margin-top:10px">仅供娱乐</p></div>
+    </section>
+  </div>
+</main></div>
+
+<div class="md" id="md"><div class="sheet glass"><h3 id="mt"></h3><p id="mm"></p><div class="nav" id="mb"></div></div></div>
+<div class="veil" id="veil"><div class="veil-c"><h2 id="vh">Pro</h2><p id="vp">更多题目，更细致的解读</p></div></div>
+
+<script>
+(function(){
+"use strict";
+/* 每题第一个选项最贴近，渲染时会打乱顺序 */
+const Q={
+love:[
+["聊天时，一般怎么收尾？","聊到困了才道晚安","说一句“我先忙”，晚点接着聊","看谁有事谁先走","聊着聊着就没下文了"],
+["ta心情不好时，你通常会？","很快察觉，陪ta聊聊","不多问，安静待在旁边","说点轻松的转移注意力","等ta自己开口"],
+["一起看电影，谁来选片？","轮流选，口味也越来越接近","一起商量，常常商量很久","基本是一个人说了算","各看各的"],
+["你们最常为什么拌嘴？","几乎不拌嘴，有话直说","吃什么、去哪这类小事","回消息的快慢","说不清，总是莫名其妙"],
+["在ta面前，你是什么状态？","不用装，邋遢也无所谓","大部分时候放松","还是会注意形象","还没到那一步"],
+["ta忘了纪念日，你会？","直接说，一起补上","笑着提醒一下","嘴上不说，心里在意","无所谓"],
+["你多久主动找ta一次？","想到就发","每天固定几次","有事才找","通常等ta先开口"],
+["ta和异性朋友单独吃饭？","信任，完全不介意","会问问，但不影响心情","嘴上说没事，心里在意","会不太舒服"],
+["一起出游，怎么安排？","一起商量，各自分工","一个人主导，另一个配合","走到哪算哪","很难达成一致"],
+["你觉得最舒服的相处是？","安静待着，各做各的也自在","无话不谈","互相调侃，打打闹闹","保持一点距离"],
+["一起吃饭，谁来点菜？","谁都行，总能点到彼此爱吃的","我来点，我比较了解ta","ta来点，我都可以","各点各的"],
+["ta突然送你一份礼物，你的第一反应是？","很开心，直接说出来","有点意外，但很感动","先问问怎么了","有点不知所措"],
+["你们吵架之后，通常怎么和好？","有一方主动说开，很快就好","冷静一下，再慢慢聊","默契地装作没事","需要很久才能缓过来"],
+["你们聊过以后想住在哪里吗？","聊过，而且想法差不多","聊过，还在互相协调","偶尔提到，没认真聊","从没聊过"],
+["ta的朋友圈动态，你的习惯是？","会看，也会留言互动","会看，偶尔点赞","只是随手刷到","很少关注"]],
+friend:[
+["你们联系的频率？","几乎每天，什么都分享","隔几天聊一次","平时很少，见面却不生分","有事才联系"],
+["ta找你借一笔不大的钱？","直接借","先问问用途","婉拒，但请ta吃饭","看当时情况"],
+["一起旅行，你通常是？","一起做攻略，分工明确","跟着走，不操心","负责拍照和活跃气氛","走到哪算哪"],
+["ta谈恋爱了，你的反应？","真心高兴，也保持分寸","有点失落，但会祝福","马上打听细节","没什么特别感觉"],
+["ta在你面前哭过吗？","哭过，我陪着","我在ta面前哭过","好像没有","都没有"],
+["你们会指出对方的缺点吗？","会，直接但有分寸","会，但说得委婉","很少，怕伤感情","基本不会"],
+["遇到麻烦，第一个想到ta吗？","几乎是本能","会想到，看事情大小","偶尔","通常自己扛"],
+["ta和你不喜欢的人走得很近？","直接说出感受","不说，但心里别扭","尊重ta的选择","会重新考虑这段友情"],
+["你们的共同爱好？","很多，经常一起玩","有一两个核心的","不多，但能互相陪伴","几乎没有"],
+["你觉得能做一辈子朋友吗？","能，很确定","应该可以","看缘分","没想过"],
+["你们一起吃饭，谁来组织？","谁有空谁约，很自然","我来组织","ta来组织，我配合","很少聚"],
+["在朋友圈或群里，你会给ta点赞留言吗？","会，而且会认真评论","偶尔点赞","看到才点","基本不互动"],
+["ta做了一个你不太认同的决定，你会？","说出我的想法，但尊重ta","先听ta讲理由","不说，默默支持","保持沉默，心里不认同"],
+["很久没见，再见面是什么感觉？","像昨天刚见过","稍微生疏，很快就热起来","需要一点时间暖场","有些尴尬"],
+["你们聊过各自未来的打算吗？","经常聊，也会互相出主意","聊过一些","偶尔提到","几乎没聊过"]],
+random:[
+["你多久会想起ta一次？","几乎每天","隔几天","偶尔","很少"],
+["你们会分享秘密吗？","几乎无话不说","会分享一部分","很少","从不"],
+["一起被困在电梯里？","都很淡定，开始聊天","一个慌，另一个稳住","两个人都慌","谁也不想说话"],
+["ta最了解你的哪一面？","最真实的一面","难过时的样子","开心时的样子","其实不太了解我"],
+["你们的未来规划里有彼此吗？","很明确，有","模模糊糊想过","没讨论过","各走各的"],
+["ta要搬去另一座城市？","难过，但会常联系","支持ta，顺其自然","联系可能慢慢变少","大概会渐渐疏远"],
+["你们一起做过傻事吗？","有，想起来还会笑","有，但不太想提","没有，但想试试","不记得了"],
+["你们之间最大的差异？","几乎没有","生活节奏不同","兴趣圈子不同","性格一静一动"],
+["给你们的关系打分（十分制）？","九到十分","七到八分","五到六分","四分以下"],
+["你相信你们之间有缘分吗？","非常相信","有点相信","说不好","不太信"],
+["和ta在一起时，你的状态更像？","放松，像一个人待着","开心，话很多","有点拘谨","需要用力维持"],
+["如果ta有重要的事需要帮忙？","不用开口，我先想到","开口我就帮","看我能不能帮上","会犹豫一下"],
+["你们之间有只属于你们的小默契吗？","有很多，一个眼神就懂","有几个","想不出来","没有"],
+["ta有事瞒着你，你会？","相信ta，等ta愿意说","轻轻问一句","心里在意，但不说","会忍不住追问"],
+["你期待这段关系一年后是什么样？","更近，也更稳","差不多，就很好","不确定","没怎么想过"]]
+};
+const MODES={love:["爱情","你们的感情"],friend:["友情","你们的友情"],random:["随便一测","你们的关系"]};
+const TIERS=["很合拍","相处舒服","正在靠近","还需要时间"];
+const OPEN=['很稳，不少地方不用说出口，对方就懂。这样的默契，是时间和用心一起养出来的。','整体很舒服，有默契，也有彼此愿意靠近的诚意，剩下的只是慢慢磨合。','正在慢慢靠近。有些地方已经对上了，有些还在路上，这个阶段本身就很珍贵。','还有一些空白，但空白也意味着还有很多可以一起发现的东西，不必着急。'];
+const CLOSE=['你们已经拥有了很多人在找的东西，好好珍惜，也别忘了偶尔说一句“谢谢你在”。','继续保持这份舒服，再一起去做点新的事，默契会更深。','别着急，一点一点来就好。你已经在认真对待这段关系，这很重要。','先从一次不带目的的聊天开始。关系不需要一下子就有答案。'];
+const NORMAL_N=6,PRO_N=15;
+const DIMS=['沟通','信任','陪伴','自在','未来'];
+const DIM='023031214330042012210102430124213044332432014';
+const STRONG=['你们愿意把心里话说出来，也愿意认真听，很多小误会因此没有机会长大。','你们给了彼此很足的安全感，不用时时确认，也知道对方在。','你们很擅长出现在对方身边，不一定轰轰烈烈，但每次都在。','在彼此面前你们是放松的，不用表演，也不用担心被评判。','你们愿意把彼此放进未来里，这是一种很有分量的认真。'];
+const GROW=['有些话可能还停在嘴边。不用一次说完，从一件小事开始说就好。','偶尔会有一点点不确定，这很正常，信任本来就是一点点攒出来的。','也许你们都有些忙，陪伴的方式还在寻找。哪怕十分钟，也比“有空再说”更有分量。','还有些部分你们习惯收着。慢慢来，真正的自在是时间给的。','关于以后，你们可能还没聊过。不必有答案，只是让对方知道你在想。'];
+const TODO=['给ta发一条不为任何事的消息，比如“刚刚想到你了”。','找个轻松的时刻，告诉ta一件你很少说出口的小事。','约ta做一件十分钟就能完成的事：散步、喝杯东西，或者一起吃顿饭。','下次见面什么都不安排，看看你们会自然聊到哪里。','问ta一句“最近有什么想做的事吗”，把对方的想法放进你的想象里。'];
+const MID=['沟通上有默契也有错位，多说一句“我是这么想的”会很有帮助。','信任处在中间地带，大部分时候安心，偶尔还需要一点确认。','陪伴是有的，但还没到随时都在的程度，找到彼此舒服的节奏就好。','自在感正在形成，有些时候放得开，有些时候还会收着。','对未来有想象，但还没有清晰的轮廓，这并不急。'];
+const STYLE=[['投入型','你在这段关系里给得很多，回答也大多偏向靠近和表达。这是一种很可贵的真诚，只是别忘了也让自己被好好接住。'],['平衡型','你既愿意靠近，也懂得留一点空间。这种分寸感让关系不容易让人窒息，也不容易让人觉得被冷落。'],['留白型','你习惯给关系留一些距离和余地。这不是冷淡，更像是一种谨慎。如果愿意，试着多说一点心里的想法，对方会很珍惜。']];
+const BEST_C=['这一点你们几乎不用磨合。','你们在这里很同频。','这是你们之间一块很稳的地方。'];
+const GAP_C=['不同不等于不合，只是节奏还没对上。','聊开了，常常会发现对方比想象中更在意。','这里值得慢慢聊，而不是靠猜。'];
+
+const $=s=>document.querySelector(s);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let mode="love",qs=[],ans=[],i=0,pro=false,busy=false,warned=false,snap=null,ac,nameT='',lastTxt='';
+const card=$("#card"),stage=$("#stage"),quiz=$("#quiz"),result=$("#result"),qc=$("#qc"),opts=$("#opts"),
+  prev=$("#prev"),next=$("#next"),segEl=$("#segEl"),th=$("#th"),xp=$("#xp"),sub=$("#sub"),
+  veil=$("#veil"),wrap=$("#wrap"),home=$("#home"),vh=$("#vh"),vp=$("#vp"),proBtn=$("#proBtn"),segBtns=[...segEl.querySelectorAll("button")];
+
+/* 轻触反馈 */
+function tick(){
+  if(navigator.vibrate)navigator.vibrate(8);
+  try{
+    ac=ac||new(window.AudioContext||window.webkitAudioContext)();
+    if(ac.state==="suspended")ac.resume();
+    const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;
+    o.frequency.setValueAtTime(720,t);o.frequency.exponentialRampToValueAtTime(320,t+.05);
+    g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.05);
+    o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.06);
+  }catch(e){}
+}
+
+/* 弹窗 */
+function modal(title,msg,btns){
+  return new Promise(res=>{
+    $("#mt").textContent=title;$("#mm").textContent=msg;
+    const mb=$("#mb");mb.innerHTML="";
+    btns.forEach(([label,val,primary])=>{
+      const b=document.createElement("button");
+      b.className="btn"+(primary?" pri":"");b.textContent=label;
+      b.onclick=()=>{tick();$("#md").classList.remove("show");res(val)};
+      mb.appendChild(b);
+    });
+    $("#md").classList.add("show");
+  });
+}
+
+/* 顶部与主题 */
+function nameify(el){
+  if(!nameT)return;
+  const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let n;
+  while(n=w.nextNode())n.nodeValue=n.nodeValue.replace(/ta/g,()=>nameT);
+}
+function seg(anim){
+  [segEl,$('#hseg')].forEach(s=>{
+    const b=s.querySelector('.on'),t=s.querySelector('.thumb');
+    if(!b||!b.offsetWidth)return;
+    t.style.transition=anim?'':'none';
+    t.style.width=b.offsetWidth+'px';
+    t.style.transform='translateX('+b.offsetLeft+'px)';
+    if(!anim){void t.offsetWidth;t.style.transition=''}
+  });
+}
+function chrome(){
+  document.body.classList.toggle("pro",pro);
+  segEl.hidden=pro;xp.hidden=!pro;
+  sub.textContent=pro?"Pro · "+MODES[mode][0]+"　共 "+PRO_N+" 题":"选一个模式，凭直觉回答";
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===mode));
+  if(!pro)seg(false);
+}
+
+/* 出题与渲染 */
+function begin(){
+  const all=[];['love','friend','random'].forEach(m=>Q[m].forEach(q=>all.push({q,m,d:+DIM[all.length]})));
+  qs=shuffle(all.filter(x=>x.m===mode)).slice(0,pro?PRO_N:NORMAL_N).map(x=>({t:x.q[0],d:x.d,o:shuffle(x.q.slice(1).map((s,k)=>({s,k})))}));
+  ans=new Array(qs.length).fill(undefined);i=0;warned=false;
+  result.hidden=true;quiz.hidden=false;render();
+}
+function opt(txt,sel,fn,cls){
+  const b=document.createElement("button");
+  b.className="opt "+(cls||"")+(sel?" sel":"");
+  b.innerHTML="<i></i>";b.append(txt);
+  b.onclick=()=>{if(busy)return;tick();fn()};
+  return b;
+}
+function render(){
+  const q=qs[i];
+  $("#prog").textContent=(i+1)+" / "+qs.length;
+  $("#fill").style.width=((i+1)/qs.length*100)+"%";
+  $("#qt").textContent=q.t;
+  opts.innerHTML="";
+  q.o.forEach(o=>opts.append(opt(o.s,ans[i]===o.k,()=>pick(o.k))));
+  opts.append(opt("跳过本题",ans[i]===null,()=>pick(null),"skip"));
+  prev.disabled=i===0;
+  next.textContent=i===qs.length-1?"查看结果":"下一题";
+  next.disabled=ans[i]===undefined;nameify(qc);
+}
+async function pick(v){
+  const at=i,n=qs[i].o.length;
+  ans[i]=v;
+  [...opts.children].forEach((b,k)=>b.classList.toggle("sel",v===null?k===n:(k<n&&qs[at].o[k].k===v)));
+  next.disabled=false;
+  if(v===null&&!warned){warned=true;await modal("提示","跳过题目会影响结果的准确性。",[["我知道了",1,true]])}
+  if(at<qs.length-1){await wait(260);if(i===at&&!busy)go(at+1)}
+}
+async function go(n){
+  if(busy||n<0||n>=qs.length)return;
+  busy=true;
+  const d=n>i?1:-1;
+  const a1=qc.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"translateX("+(-24*d)+"px) scale(.98)",filter:"blur(10px)"}],{duration:180,easing:"ease-in",fill:"forwards"});
+  await a1.finished;
+  i=n;render();
+  qc.animate([{opacity:0,transform:"translateX("+(24*d)+"px) scale(.98)",filter:"blur(10px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:340,easing:"cubic-bezier(.16,1,.3,1)"});
+  a1.cancel();busy=false;
+}
+/* 内容淡出 → 执行 → 淡入 */
+async function swap(fn,el){
+  el=el||stage;busy=true;
+  const out=[{opacity:1,filter:"blur(0)",transform:"none"},{opacity:0,filter:"blur(10px)",transform:"scale(.985)"}];
+  const o=el.animate(out,{duration:220,easing:"ease-in",fill:"forwards"});
+  await o.finished;
+  fn();
+  const n=el.animate(out.slice().reverse(),{duration:520,easing:"cubic-bezier(.16,1,.3,1)"});
+  o.cancel();busy=false;
+  return n.finished;
+}
+
+/* 结果 */
+async function finish(){
+  const sk=ans.filter(a=>a===null).length;
+  if(sk>qs.length*2/3){
+    const r=await modal("提示","跳过的题目太多，结果可能不准确。",[["返回",0],["重新开始",1,true]]);
+    if(r)swap(begin);
+    return;
+  }
+  if(!pro)snap={mode,qs,ans};
+  swap(()=>showResult(true));
+}
+function type(el,text){
+  el.textContent="";
+  [...text].forEach((c,n)=>{const s=document.createElement("span");s.className="ch";s.textContent=c;s.style.transitionDelay=n*16+"ms";el.appendChild(s)});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.querySelectorAll(".ch").forEach(s=>s.classList.add("v"))));
+}
+function count(el,to,dur){
+  const t0=performance.now();
+  (function f(t){const p=Math.min(1,(t-t0)/dur);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);
+}
+function showResult(save){
+  quiz.hidden=true;result.hidden=false;proBtn.hidden=pro;
+  const vals=qs.map((q,k)=>({q,a:ans[k]})).filter(x=>typeof x.a==="number");
+  const avg=vals.reduce((s,x)=>s+(3-x.a)/3,0)/vals.length;
+  const jit=vals.reduce((s,x,n)=>s+x.a*(n+2),0)%3;
+  const score=Math.min(98,Math.round(56+avg*40)+jit);
+  const tier=score>=90?0:score>=78?1:score>=66?2:3;
+  const sorted=vals.slice().sort((a,b)=>a.a-b.a),k=pro?3:1;
+  const best=sorted.slice(0,k);
+  const worst=sorted.slice().reverse().filter(x=>x.a>0&&!best.includes(x)).slice(0,k);
+  const row=c=>(x,n)=>'<div class="row"><b>'+x.q.t+'</b><span>'+x.q.o.find(o=>o.k===x.a).s+'</span><em>'+c[n%c.length]+'</em></div>';
+  $("#rows").innerHTML='<div class="grp"><h4>最合拍的地方</h4>'+best.map(row(BEST_C)).join("")+'</div>'+
+    (worst.length?'<div class="grp"><h4>还可以更靠近的地方</h4>'+worst.map(row(GAP_C)).join("")+'</div>':"");
+  const sk=ans.filter(a=>a===null).length;
+  $("#close").textContent=CLOSE[tier]+(pro?" 共回答 "+vals.length+" 题。":"")+(sk?" 跳过了 "+sk+" 题，结果仅供参考。":"");
+  $("#rtag").textContent=(pro?"Pro · ":"")+MODES[mode][0]+"测试";
+  $("#tier").textContent=TIERS[tier];
+  let pv=null;const key='qz_'+(pro?'pro':mode);
+  try{pv=+localStorage.getItem(key)||null;if(save)localStorage.setItem(key,score)}catch(_){}
+  $("#rlab").textContent='契合度'+(save&&pv?'　·　'+(score===pv?'与上次持平':'较上次 '+(score>pv?'+':'')+(score-pv)):'');
+  lastTxt=$("#rtag").textContent+' · 契合度 '+score+'（'+TIERS[tier]+'）\n'+MODES[mode][1]+OPEN[tier]+'\n'+CLOSE[tier];
+  const dm=DIMS.map((n,d)=>{const v=vals.filter(x=>x.q.d===d);return v.length?{n,d,p:Math.round(40+v.reduce((s,x)=>s+(3-x.a)/3,0)/v.length*58)}:null}).filter(Boolean);
+  const byP=dm.slice().sort((a,b)=>b.p-a.p),bd=byP[0].d,wd=byP[byP.length-1].d;
+  const inv=vals.filter(x=>x.a<=1).length/vals.length,si=inv>=.75?0:inv>=.45?1:2;
+  const L=$('#letter'),Dm=$('#dims');L.hidden=Dm.hidden=!pro;
+  if(pro){
+    Dm.innerHTML='<h4>关系画像</h4>'+dm.map(x=>'<div class="dim"><span>'+x.n+'</span><div><b style="--w:'+x.p+'%"></b></div><em>'+x.p+'</em></div>').join('')+'<div class="dnote">'+dm.map(x=>'<p><b>'+x.n+'</b>'+(x.p>=78?STRONG[x.d]:x.p<66?GROW[x.d]:MID[x.d])+'</p>').join('')+'<p><b>整体</b>'+(byP[0].p-byP[byP.length-1].p<12?'五个维度比较均衡，没有明显短板。':'强项和待补的一面差距比较明显，这正是你们最值得聊的地方。')+'</p></div>';
+    const lt=STRONG[bd]+'\n\n'+(tier<2?'如果非要找一个还能更好的地方：':'值得多花点心思的地方：')+GROW[wd]+'\n\n无论分数是多少，愿意停下来认真想一想“我们之间是什么样的”，本身就是在好好对待这段关系。';
+    L.innerHTML='<h4>写给你们的话</h4><p id="lt"></p>';
+    setTimeout(()=>type($('#lt'),lt),800);
+  }
+  const S=$('#style'),A=$('#all');S.hidden=A.hidden=!pro;
+  if(pro){
+    S.innerHTML='<h4>你的相处风格</h4><p><b>'+STYLE[si][0]+'</b>　'+STYLE[si][1]+'</p>';
+    A.innerHTML='<details><summary>逐题回看（'+vals.length+' 题）</summary><div class="recap">'+vals.map(x=>'<div><i>'+'●'.repeat(4-x.a)+'○'.repeat(x.a)+'</i><b>'+x.q.t+'</b><span>'+x.q.o.find(o=>o.k===x.a).s+'</span></div>').join('')+'</div></details>';
+  }
+  $('#todo').innerHTML=pro?'<h4>接下来可以做的三件小事</h4><ol>'+[TODO[wd],TODO[byP[Math.max(byP.length-2,0)].d],'把这份结果当作开头，问问ta：你觉得我们哪里最舒服？'].map(t=>'<li>'+t+'</li>').join('')+'</ol>':'<h4>今晚可以做的一件小事</h4><p>'+TODO[wd]+'</p>';
+  [...result.querySelectorAll('.rise:not([hidden])')].forEach((e,n)=>e.style.setProperty('--d',(pro?.18:.12)*n+'s'));nameify(result);
+  result.classList.remove("go");void result.offsetWidth;result.classList.add("go");
+  const rv=$("#rv");rv.getAnimations().forEach(a=>a.cancel());
+  rv.animate([{strokeDashoffset:301.6},{strokeDashoffset:301.6*(1-score/100)}],{duration:1400,delay:150,easing:"cubic-bezier(.16,1,.3,1)",fill:"forwards"});
+  $("#num").textContent="0";setTimeout(()=>count($("#num"),score,1300),150);
+  type($("#open"),MODES[mode][1]+OPEN[tier]);
+}
+
+/* 进入 Pro：圆形展开 → 标题揭示 → 回到内容 */
+async function enterPro(src,fromHome){
+  if(busy)return;
+  if(calm){pro=true;chrome();begin();if(fromHome){snap=null;home.hidden=true;wrap.hidden=false}return}
+  busy=true;
+  const fo=fromHome?home:card,r=(src||proBtn).getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+  const R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const ease="cubic-bezier(.76,0,.24,1)",pop="cubic-bezier(.16,1,.3,1)";
+  veil.style.pointerEvents="auto";
+  fo.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"scale(.94)",filter:"blur(10px)"}],{duration:750,easing:ease,fill:"forwards"});
+  veil.animate([{clipPath:"circle(0px at "+x+"px "+y+"px)"},{clipPath:"circle("+R+"px at "+x+"px "+y+"px)"}],{duration:1000,easing:ease,fill:"forwards"});
+  await wait(760);
+  vh.animate([{opacity:0,transform:"scale(1.16)",filter:"blur(26px)"},{opacity:1,transform:"scale(1)",filter:"blur(0)"}],{duration:1200,easing:pop,fill:"forwards"});
+  await wait(380);
+  vp.animate([{opacity:0,transform:"translateY(12px)"},{opacity:1,transform:"none"}],{duration:900,easing:pop,fill:"forwards"});
+  await wait(1700);
+  pro=true;chrome();begin();window.scrollTo(0,0);if(fromHome){snap=null;home.hidden=true;wrap.hidden=false;seg(false)}
+  [card,home].forEach(e=>e.getAnimations().forEach(a=>a.cancel()));
+  card.animate([{opacity:0,transform:"scale(.94)",filter:"blur(14px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:1100,delay:150,easing:pop,fill:"backwards"});
+  vh.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(1.08)"}],{duration:600,easing:"ease-in",fill:"forwards"});
+  vp.animate([{opacity:1},{opacity:0}],{duration:400,fill:"forwards"});
+  veil.animate([{opacity:1},{opacity:0}],{duration:900,delay:150,easing:"ease-out",fill:"forwards"});
+  await wait(1100);
+  [veil,vh,vp].forEach(e=>e.getAnimations().forEach(a=>a.cancel()));
+  veil.style.pointerEvents="";busy=false;
+}
+const FX=[{opacity:1,filter:'blur(0)',transform:'none'},{opacity:0,filter:'blur(10px)',transform:'scale(.985)'}];
+async function view(show,hide,fn){
+  busy=true;
+  const t=e=>e===wrap?card:e;
+  const o=t(hide).animate(FX,{duration:260,easing:'ease-in',fill:'forwards'});
+  await o.finished;
+  hide.hidden=true;o.cancel();
+  if(fn)fn();
+  show.hidden=false;seg(false);window.scrollTo(0,0);
+  t(show).animate(FX.slice().reverse(),{duration:650,easing:'cubic-bezier(.16,1,.3,1)'});
+  busy=false;
+}
+function exitPro(){
+  if(busy)return;
+  swap(()=>{
+    pro=false;
+    if(snap){mode=snap.mode;qs=snap.qs;ans=snap.ans;i=0;chrome();showResult()}
+    else{chrome();begin()}
+  },card);
+}
+
+/* 事件 */
+segBtns.forEach(b=>b.onclick=()=>{
+  if(busy||(b.dataset.m===mode&&result.hidden))return;
+  tick();
+  document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.m===b.dataset.m));seg(true);
+  swap(()=>{mode=b.dataset.m;begin()});
+});
+prev.onclick=()=>{if(busy)return;tick();go(i-1)};
+next.onclick=()=>{if(busy||ans[i]===undefined)return;tick();i===qs.length-1?finish():go(i+1)};
+$("#again").onclick=()=>{if(busy)return;tick();swap(begin)};
+proBtn.onclick=async()=>{
+  if(busy)return;tick();
+  if(await modal("Pro 测试","更多题目，更细致的解读。",[["取消",0],["进入",1,true]]))enterPro(proBtn,false);
+};
+xp.onclick=()=>{tick();exitPro()};
+addEventListener("resize",()=>{if(!pro)seg(false)});
+try{nameT=localStorage.getItem('qz_name')||'';$('#nm').value=nameT}catch(_){}
+$('#nm').oninput=e=>{
+  nameT=e.target.value.trim();
+  try{localStorage.setItem('qz_name',nameT)}catch(_){}
+  if(!quiz.hidden&&qs.length&&!busy)render();
+};
+$('#copy').onclick=async e=>{
+  tick();const b=e.target;
+  try{await navigator.clipboard.writeText(lastTxt)}catch(_){
+    const a=document.createElement('textarea');a.value=lastTxt;document.body.appendChild(a);a.select();
+    try{document.execCommand('copy')}catch(_){}a.remove();
+  }
+  b.textContent='已复制';setTimeout(()=>b.textContent='复制结果',1600);
+};
+$('#hseg').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(busy)return;tick();mode=b.dataset.m;
+  document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.m===mode));seg(true);
+});
+$('#goN').onclick=()=>{if(busy)return;tick();view(wrap,home,()=>{pro=false;snap=null;chrome();begin()})};
+$('#goP').onclick=e=>{if(busy)return;tick();enterPro(e.currentTarget,true)};
+$('#hm').onclick=()=>{if(busy)return;tick();view(home,wrap,()=>{pro=false;chrome()})};
+$('#author').onclick=e=>{
+  e.preventDefault();tick();
+  modal('作者 Fang','',[['好',1,true]]);
+  $('#mm').innerHTML='你可以通过邮箱联系我<br><br><a href="mailto:703769461@qq.com">703769461@qq.com</a><br><a href="mailto:ruil83717@gmail.com">ruil83717@gmail.com</a>';
+};
+addEventListener('keydown',e=>{
+  if(busy||wrap.hidden||quiz.hidden||e.target.tagName==='INPUT'||$('#md').classList.contains('show'))return;
+  const k=e.key;
+  if(k>='1'&&k<='5'){const b=opts.children[+k-1];if(b)b.click()}
+  else if(k==='ArrowLeft')prev.click();
+  else if(k==='ArrowRight'||k==='Enter')next.click();
+});
+
+chrome();begin();
+requestAnimationFrame(()=>seg(false));
+})();
+</script>
+</body>
+</html>
